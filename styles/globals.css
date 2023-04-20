@@ -5,8 +5,12 @@
 body {
   font-family: 'Quicksand', sans-serif;
 }
-.bg-dark-color {
-  background-color: #252525;
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
 }
 
 @layer base {
@@ -25,4 +29,32 @@ body {
 input,
 select {
   @apply outline-none border-none focus:ring-0 focus:outline-none focus:border-[0px];
+}
+
+@media only screen and (min-width: 640px) {
+  body {
+    overflow: overlay;
+  }
+}
+
+/* custom scrollbar */
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #85898954;
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+  object-fit: cover;
+  background-repeat: no-repeat;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #a39d9da1;
 }

@@ -183,16 +183,26 @@ export default function Home() {
           <div className="dark:bg-[#252525] bg-[#eee] rounded-full  ml-10 px-5 py-2 font-semibold">
             ⛅ Cloudy Weather{' '}
           </div>
-          <div className="dark:bg-[#252525] bg-[#eee] rounded-full flex mr-10 px-5 py-2 font-semibold">
+          <div className="dark:bg-[#252525] bg-[#eee] rounded-full flex mr-10 px-5 py-2 font-semibold items-center">
             <svg
-              className="w-4 fill-current  "
-              viewBox="0 0 22 21"
-              fill="none"
               xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-calendar2"
+              viewBox="0 0 16 16"
             >
-              <path d="M21.7232 0.776787V14.7277C21.7232 15.7637 21.3117 16.7573 20.5791 17.4898C19.8465 18.2224 18.853 18.6339 17.817 18.6339C16.781 18.6339 15.7874 18.2224 15.0548 17.4898C14.3223 16.7573 13.9107 15.7637 13.9107 14.7277C13.9107 13.6917 14.3223 12.6981 15.0548 11.9655C15.7874 11.233 16.781 10.8214 17.817 10.8214C18.4197 10.8214 18.9888 10.9554 19.4911 11.2009V4.64955L8.33037 7.02679V16.9598C8.33037 17.9958 7.91882 18.9894 7.18625 19.722C6.45369 20.4545 5.46012 20.8661 4.42412 20.8661C3.38812 20.8661 2.39455 20.4545 1.66198 19.722C0.929418 18.9894 0.517868 17.9958 0.517868 16.9598C0.517868 15.9238 0.929418 14.9303 1.66198 14.1977C2.39455 13.4651 3.38812 13.0536 4.42412 13.0536C5.0268 13.0536 5.59599 13.1875 6.09822 13.433V4.125L21.7232 0.776787Z" />
+              <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z" />
+              <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z" />
             </svg>
-            <p className="ml-3">Now playing : 'Gravity' by John</p>
+            <p className="ml-3">
+              {time.toLocaleDateString('en-US', {
+                weekday: 'long',
+                month: 'long',
+                year: 'numeric',
+                day: 'numeric',
+              })}
+            </p>
           </div>
         </div>
         <div className="fixed bottom-10 w-full flex justify-between">

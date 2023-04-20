@@ -1,124 +1,586 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
+import Image from 'next/image';
+import ArrowIcon from '@/components/arrow';
+import { useEffect, useState } from 'react';
+import { useTheme } from 'next-themes';
 
-const inter = Inter({ subsets: ['latin'] })
+const places = [
+  {
+    name: 'Computer',
+    icon: (
+      <svg
+        className="w-5 fill-current  "
+        viewBox="0 0 22 21"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M18.8214 0.276764C19.4134 0.276764 19.9812 0.511935 20.3998 0.930543C20.8184 1.34915 21.0536 1.91691 21.0536 2.50891V14.7857C21.0536 15.3777 20.8184 15.9454 20.3998 16.3641C19.9812 16.7827 19.4134 17.0178 18.8214 17.0178H14.3571V18.1339H15.4732C15.7692 18.1339 16.0531 18.2515 16.2624 18.4608C16.4717 18.6701 16.5893 18.954 16.5893 19.25C16.5893 19.546 16.4717 19.8299 16.2624 20.0392C16.0531 20.2485 15.7692 20.366 15.4732 20.366H6.54464C6.24864 20.366 5.96476 20.2485 5.75545 20.0392C5.54615 19.8299 5.42856 19.546 5.42856 19.25C5.42856 18.954 5.54615 18.6701 5.75545 18.4608C5.96476 18.2515 6.24864 18.1339 6.54464 18.1339H7.66071V17.0178H3.19642C2.60442 17.0178 2.03667 16.7827 1.61806 16.3641C1.19945 15.9454 0.964279 15.3777 0.964279 14.7857V2.50891C0.964279 1.91691 1.19945 1.34915 1.61806 0.930543C2.03667 0.511935 2.60442 0.276764 3.19642 0.276764H18.8214ZM12.125 17.0178H9.89285V18.1339H12.125V17.0178ZM18.8214 2.50891H3.19642V14.7857H18.8214V2.50891Z" />
+      </svg>
+    ),
+  },
+  {
+    name: 'Downloads',
+    icon: (
+      <svg
+        className="w-5 fill-current  "
+        viewBox="0 0 23 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M11.6786 0.910698C5.52903 0.910698 0.517868 5.92186 0.517868 12.0714C0.517868 18.221 5.52903 23.2321 11.6786 23.2321C17.8281 23.2321 22.8393 18.221 22.8393 12.0714C22.8393 5.92186 17.8281 0.910698 11.6786 0.910698ZM10.5625 9.83927V6.49106C10.5625 5.87722 11.0647 5.37498 11.6786 5.37498C12.2924 5.37498 12.7947 5.87722 12.7947 6.49106V9.83927H14.7924C15.2947 9.83927 15.5402 10.4419 15.183 10.7879L12.0692 13.9018C11.846 14.125 11.5 14.125 11.2768 13.9018L8.16296 10.7879C8.08583 10.7093 8.03372 10.6095 8.0132 10.5013C7.99267 10.393 8.00465 10.2811 8.04762 10.1797C8.09058 10.0782 8.16262 9.99175 8.25465 9.93118C8.34667 9.8706 8.45457 9.83862 8.56474 9.83927H10.5625ZM16.1429 17.6518H7.2143C6.60046 17.6518 6.09823 17.1495 6.09823 16.5357C6.09823 15.9219 6.60046 15.4196 7.2143 15.4196H16.1429C16.7567 15.4196 17.2589 15.9219 17.2589 16.5357C17.2589 17.1495 16.7567 17.6518 16.1429 17.6518Z" />
+      </svg>
+    ),
+  },
+  {
+    name: 'Music',
+    icon: (
+      <svg
+        className="w-5 fill-current  "
+        viewBox="0 0 22 21"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M21.7232 0.776787V14.7277C21.7232 15.7637 21.3117 16.7573 20.5791 17.4898C19.8465 18.2224 18.853 18.6339 17.817 18.6339C16.781 18.6339 15.7874 18.2224 15.0548 17.4898C14.3223 16.7573 13.9107 15.7637 13.9107 14.7277C13.9107 13.6917 14.3223 12.6981 15.0548 11.9655C15.7874 11.233 16.781 10.8214 17.817 10.8214C18.4197 10.8214 18.9888 10.9554 19.4911 11.2009V4.64955L8.33037 7.02679V16.9598C8.33037 17.9958 7.91882 18.9894 7.18625 19.722C6.45369 20.4545 5.46012 20.8661 4.42412 20.8661C3.38812 20.8661 2.39455 20.4545 1.66198 19.722C0.929418 18.9894 0.517868 17.9958 0.517868 16.9598C0.517868 15.9238 0.929418 14.9303 1.66198 14.1977C2.39455 13.4651 3.38812 13.0536 4.42412 13.0536C5.0268 13.0536 5.59599 13.1875 6.09822 13.433V4.125L21.7232 0.776787Z" />
+      </svg>
+    ),
+  },
+  {
+    name: 'Trash',
+    icon: (
+      <svg
+        className="w-5 fill-current  "
+        viewBox="0 0 17 16"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M8.34373 15.9643H9.24552C12.3515 15.9643 13.904 15.9643 14.9152 14.9754C15.9241 13.9866 16.0268 12.365 16.2332 9.12166L16.5312 4.44755C16.6428 2.6875 16.6986 1.80692 16.1931 1.25C15.6864 0.691968 14.8315 0.691968 13.1205 0.691968H4.46873C2.75779 0.691968 1.90177 0.691968 1.39618 1.25C0.889488 1.80804 0.945292 2.6875 1.05802 4.44755L1.35601 9.12166C1.56248 12.365 1.66516 13.9877 2.6752 14.9754C3.68525 15.9643 5.2377 15.9643 8.34373 15.9643ZM6.83703 5.01451C6.79239 4.53014 6.38168 4.17746 5.92185 4.22545C5.46092 4.27344 5.1261 4.70536 5.17185 5.18974L5.72989 11.0636C5.77453 11.548 6.18525 11.9007 6.64507 11.8527C7.10601 11.8047 7.44083 11.3728 7.39507 10.8884L6.83703 5.01451ZM11.6685 4.22545C12.1283 4.27344 12.4643 4.70536 12.4174 5.18974L11.8594 11.0636C11.8147 11.548 11.4029 11.9007 10.9442 11.8527C10.4832 11.8047 10.1484 11.3728 10.1942 10.8884L10.7522 5.01451C10.7969 4.53014 11.2098 4.17746 11.6685 4.22545Z"
+        />
+      </svg>
+    ),
+  },
+  {
+    name: 'Pictures',
+    icon: (
+      <svg
+        className="w-5 fill-current  "
+        viewBox="0 0 24 19"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M2.87501 18.3929C2.26117 18.3929 1.7355 18.1741 1.298 17.7366C0.860496 17.2991 0.642118 16.7738 0.642862 16.1607V2.76785C0.642862 2.15401 0.861612 1.62834 1.29911 1.19084C1.73661 0.753341 2.26191 0.534963 2.87501 0.535707H8.65068C8.94829 0.535707 9.23215 0.591511 9.50224 0.703118C9.77233 0.814725 10.0093 0.972835 10.2132 1.17745L11.8036 2.76785H20.7321C21.346 2.76785 21.8717 2.9866 22.3092 3.4241C22.7467 3.8616 22.965 4.3869 22.9643 4.99999H5.10715C4.49331 4.99999 3.96764 5.21874 3.53014 5.65624C3.09264 6.09374 2.87426 6.61904 2.87501 7.23214V16.1607L5.07925 8.82254C5.22806 8.33891 5.50261 7.95275 5.90291 7.66406C6.3032 7.37537 6.7448 7.23139 7.22768 7.23214H21.625C22.3877 7.23214 22.9877 7.53459 23.4252 8.1395C23.8627 8.74441 23.9788 9.39992 23.7734 10.106L21.7645 16.8025C21.6157 17.2861 21.3412 17.6722 20.9409 17.9609C20.5406 18.2496 20.099 18.3936 19.6161 18.3929H2.87501Z" />
+      </svg>
+    ),
+  },
+];
+
+const devices = [
+  {
+    name: 'File System',
+    icon: (
+      <svg
+        className="w-5 fill-current  "
+        viewBox="0 0 21 23"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M12.375 18.9911C12.6912 18.9911 12.9565 18.8839 13.1708 18.6696C13.385 18.4554 13.4918 18.1905 13.4911 17.875C13.4911 17.5588 13.3839 17.2935 13.1696 17.0792C12.9554 16.865 12.6905 16.7582 12.375 16.7589C12.0588 16.7589 11.7935 16.8661 11.5792 17.0804C11.365 17.2946 11.2582 17.5595 11.2589 17.875C11.2589 18.1912 11.3661 18.4565 11.5804 18.6708C11.7946 18.885 12.0595 18.9918 12.375 18.9911ZM15.7232 18.9911C16.0394 18.9911 16.3047 18.8839 16.519 18.6696C16.7333 18.4554 16.84 18.1905 16.8393 17.875C16.8393 17.5588 16.7321 17.2935 16.5179 17.0792C16.3036 16.865 16.0387 16.7582 15.7232 16.7589C15.407 16.7589 15.1417 16.8661 14.9275 17.0804C14.7132 17.2946 14.6064 17.5595 14.6071 17.875C14.6071 18.1912 14.7143 18.4565 14.9286 18.6708C15.1429 18.885 15.4077 18.9918 15.7232 18.9911ZM0.0982151 12.2946V2.25C0.0982151 1.63616 0.316965 1.11049 0.754465 0.672988C1.19196 0.235488 1.71726 0.0171106 2.33036 0.0178547H17.9554C18.5692 0.0178547 19.0949 0.236605 19.5324 0.674105C19.9699 1.1116 20.1882 1.6369 20.1875 2.25V12.2946H0.0982151ZM2.33036 22.3393C1.71652 22.3393 1.19085 22.1205 0.753349 21.683C0.315849 21.2455 0.097471 20.7202 0.0982151 20.1071V14.5268H20.1875V20.1071C20.1875 20.721 19.9688 21.2466 19.5312 21.6841C19.0938 22.1216 18.5685 22.34 17.9554 22.3393H2.33036Z" />
+      </svg>
+    ),
+  },
+  {
+    name: 'USB Drive',
+    icon: (
+      <svg
+        className="w-5 fill-current  "
+        viewBox="0 0 26 25"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M8.45536 15.8393C9.0692 15.8393 9.57143 16.3415 9.57143 16.9554C9.57143 17.5692 9.0692 18.0714 8.45536 18.0714C7.84152 18.0714 7.33929 17.5692 7.33929 16.9554C7.33929 16.3415 7.84152 15.8393 8.45536 15.8393ZM16.346 4.3326L17.942 5.90626L16.346 7.46876L14.7723 5.90626L16.346 4.3326ZM19.5045 7.46876L21.0781 9.06474L19.5045 10.6384L17.942 9.06474L19.5045 7.46876ZM8.45536 13.6072C6.60268 13.6072 5.10715 15.1027 5.10715 16.9554C5.10715 18.808 6.60268 20.3036 8.45536 20.3036C10.308 20.3036 11.8036 18.808 11.8036 16.9554C11.8036 15.1027 10.308 13.6072 8.45536 13.6072ZM10.4308 3.93081L11.2455 4.76787L15.4754 0.537955C15.6763 0.337062 15.9554 0.214294 16.2679 0.214294C16.5804 0.214294 16.8594 0.337062 17.0603 0.537955L24.9509 8.42858V8.43974C25.1298 8.66696 25.2155 8.95376 25.1906 9.24189C25.1658 9.53002 25.0322 9.79788 24.817 9.99108L20.654 14.1652L21.4799 14.9799L13.9799 22.4799C13.2553 23.2065 12.3941 23.7828 11.446 24.1754C10.4979 24.5681 9.48156 24.7694 8.45536 24.7679C4.13616 24.7679 0.64286 21.2746 0.64286 16.9554C0.64286 14.8013 1.5134 12.8482 2.93081 11.4308L10.4308 3.93081ZM22.5067 9.14287L16.2679 2.90403L12.8415 6.35269L19.058 12.5804L22.5067 9.14287Z" />
+      </svg>
+    ),
+  },
+];
+
+const toggles = [
+  {
+    name: 'wifi',
+    icon: (
+      <svg
+        className="fill-current w-6 text-[#eee] dark:text-[#252525]"
+        viewBox="0 0 26 20"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M0.574984 7.575C1.21248 8.2125 2.22498 8.275 2.91248 7.7C8.74998 2.9 17.225 2.9 23.075 7.6875C23.775 8.2625 24.8 8.2125 25.4375 7.575C26.175 6.8375 26.125 5.6125 25.3125 4.95C18.175 -0.887498 7.84998 -0.887498 0.699984 4.95C-0.112516 5.6 -0.175016 6.825 0.574984 7.575ZM10.275 17.275L12.1125 19.1125C12.6 19.6 13.3875 19.6 13.875 19.1125L15.7125 17.275C16.3 16.6875 16.175 15.675 15.425 15.2875C14.6689 14.8993 13.8312 14.6968 12.9812 14.6968C12.1313 14.6968 11.2936 14.8993 10.5375 15.2875C9.82498 15.675 9.68748 16.6875 10.275 17.275ZM5.61248 12.6125C6.22498 13.225 7.18748 13.2875 7.89998 12.775C9.39129 11.7199 11.1732 11.1533 13 11.1533C14.8268 11.1533 16.6087 11.7199 18.1 12.775C18.8125 13.275 19.775 13.225 20.3875 12.6125L20.4 12.6C21.15 11.85 21.1 10.575 20.2375 9.9625C15.9375 6.85 10.075 6.85 5.76248 9.9625C4.89998 10.5875 4.84998 11.85 5.61248 12.6125Z" />
+      </svg>
+    ),
+  },
+  {
+    name: 'bluetooth',
+    icon: (
+      <svg
+        className="w-4 fill-current text-[#eee] dark:text-[#252525]"
+        viewBox="0 0 18 26"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M17.4063 17.5L11.4063 13L17.4063 8.5C17.5809 8.36901 17.7227 8.19916 17.8203 8.00389C17.9179 7.80863 17.9688 7.59331 17.9688 7.375C17.9688 7.15669 17.9179 6.94137 17.8203 6.74611C17.7227 6.55084 17.5809 6.38099 17.4063 6.25L9.90625 0.625001C9.69733 0.468306 9.4489 0.372886 9.18879 0.349433C8.92869 0.325979 8.6672 0.375419 8.43361 0.492212C8.20003 0.609006 8.00358 0.788538 7.86628 1.01069C7.72898 1.23285 7.65626 1.48884 7.65626 1.75V10.1875L2.40626 6.25C2.10789 6.02622 1.73284 5.93014 1.36363 5.98288C0.99442 6.03563 0.661282 6.23288 0.437506 6.53125C0.21373 6.82962 0.117645 7.20466 0.170389 7.57387C0.223134 7.94309 0.420387 8.27622 0.718756 8.5L6.71876 13L0.718756 17.5C0.571019 17.6108 0.446552 17.7496 0.352463 17.9085C0.258375 18.0674 0.196506 18.2433 0.170389 18.4261C0.144273 18.6089 0.15442 18.7951 0.200252 18.974C0.246084 19.1529 0.326703 19.321 0.437506 19.4688C0.548308 19.6165 0.687126 19.741 0.846031 19.835C1.00494 19.9291 1.18082 19.991 1.36363 20.0171C1.54645 20.0432 1.73262 20.0331 1.91151 19.9873C2.0904 19.9414 2.25852 19.8608 2.40626 19.75L7.65626 15.8125V24.25C7.65626 24.5112 7.72898 24.7672 7.86628 24.9893C8.00358 25.2115 8.20003 25.391 8.43361 25.5078C8.6672 25.6246 8.92869 25.674 9.18879 25.6506C9.4489 25.6271 9.69733 25.5317 9.90625 25.375L17.4063 19.75C17.5809 19.619 17.7227 19.4492 17.8203 19.2539C17.9179 19.0586 17.9688 18.8433 17.9688 18.625C17.9688 18.4067 17.9179 18.1914 17.8203 17.9961C17.7227 17.8008 17.5809 17.631 17.4063 17.5ZM10.4688 4.5625L14.2188 7.375L10.4688 10.1875V4.5625ZM10.4688 21.4375V15.8125L14.2188 18.625L10.4688 21.4375Z" />
+      </svg>
+    ),
+  },
+  {
+    name: 'battery',
+    icon: (
+      <svg
+        className="w-6 fill-current text-[#eee] dark:text-[#252525]"
+        viewBox="0 0 26 18"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M11.4 9.3024C11.4 7.3232 10.4112 4.4432 8.46559 0.860801C8.13279 0.2464 7.26079 0.2528 6.88639 0.8368C6.36479 1.648 5.58879 2.4784 4.55199 3.3248L4.09279 3.688L3.04159 4.4992C0.891189 6.2304 0.0431894 7.768 0.230389 10.0416C0.393589 12.0512 1.59839 13.4896 3.66559 14.1488C2.93599 15.008 1.97599 15.6848 0.775989 16.1872C0.546263 16.2844 0.36423 16.4684 0.269532 16.6991C0.174834 16.9299 0.175142 17.1887 0.270389 17.4192C0.468789 17.8992 1.01439 18.1264 1.48959 17.928C3.76959 16.976 5.40639 15.4464 6.35519 13.3632C6.71039 12.5856 6.99519 11.8176 7.20639 11.0608L7.25919 10.8656L7.38719 10.3472L7.47199 9.9312L7.52319 9.6352L7.60639 9.0368C7.65919 8.5616 7.68159 8.0928 7.67519 7.6288L7.67039 7.6C7.68011 7.3616 7.78035 7.13588 7.95068 6.96881C8.12102 6.80174 8.34865 6.7059 8.58719 6.7008C8.71032 6.69953 8.83249 6.72253 8.94673 6.76848C9.06097 6.81444 9.16504 6.88244 9.253 6.96861C9.34096 7.05479 9.41108 7.15744 9.45936 7.27072C9.50764 7.38399 9.53314 7.50567 9.53439 7.6288C9.56319 9.4624 9.19519 11.3328 8.43359 13.2352L8.40159 13.3472C8.38148 13.4608 8.39598 13.5779 8.44319 13.6832C8.57119 13.9712 8.90719 14.0992 9.19039 13.968L9.33439 13.896C9.4204 13.8471 9.50134 13.7897 9.57599 13.7248C10.4752 12.9408 11.4 11.2816 11.4 9.3024ZM22.5904 5.7664C22.5308 4.74764 22.0841 3.79018 21.3417 3.09001C20.5992 2.38983 19.6173 1.99989 18.5968 2H12.2544C11.7536 2 11.3968 2.224 11.3968 2.7968C11.3968 3.3696 11.7168 3.5904 12.2544 3.5904H19.0064L19.1984 3.6C19.6932 3.64773 20.1525 3.87803 20.4868 4.24601C20.8211 4.61399 21.0063 5.09327 21.0064 5.5904V14.4L20.9968 14.592C20.9491 15.0868 20.7188 15.5462 20.3508 15.8804C19.9828 16.2147 19.5035 16.3999 19.0064 16.4H6.59679C6.11519 16.4 5.79359 16.7088 5.79359 17.192C5.79359 17.6768 6.11359 17.992 6.59679 18H18.5968L18.832 17.9936C19.8505 17.9336 20.8075 17.4867 21.5074 16.7443C22.2072 16.002 22.5969 15.0202 22.5968 14V12.6896H24.464L24.6432 12.6784C24.9629 12.635 25.2559 12.4772 25.4681 12.2342C25.6802 11.9911 25.797 11.6794 25.7968 11.3568V8.6912L25.7872 8.528C25.7474 8.20501 25.5909 7.90769 25.3472 7.69199C25.1035 7.4763 24.7894 7.35709 24.464 7.3568L22.5968 7.3328V6L22.5904 5.7664Z" />
+      </svg>
+    ),
+  },
+  {
+    name: 'airplane',
+    icon: (
+      <svg
+        className="w-5 fill-current text-[#eee] dark:text-[#252525]"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M22.4133 1.21333C23.2 2 23.2 3.26666 22.4133 4.04L17.2267 9.22667L20.0533 21.48L18.1733 23.3733L13 13.4667L7.79999 18.6667L8.27999 21.96L6.85333 23.3733L4.50666 19.1333L0.253326 16.7733L1.66666 15.3333L4.99999 15.8267L10.16 10.6667L0.253326 5.45333L2.14666 3.57333L14.4 6.4L19.5867 1.21333C20.3333 0.439998 21.6667 0.439998 22.4133 1.21333Z" />
+      </svg>
+    ),
+  },
+];
+
+const files_in_folder = [
+  {
+    name: 'Docs',
+    icon: '/assets/folder_icons/folder-documents.svg',
+  },
+  {
+    name: 'Photos',
+    icon: '/assets/folder_icons/folder-pictures.svg',
+  },
+  {
+    name: 'Videos',
+    icon: '/assets/folder_icons/folder-video.svg',
+  },
+  {
+    name: 'Downloads',
+    icon: '/assets/folder_icons/folder-download.svg',
+  },
+  {
+    name: 'Projects',
+    icon: '/assets/folder_icons/folder-root.svg',
+  },
+  {
+    name: 'Shared',
+    icon: '/assets/folder_icons/folder-network.svg',
+  },
+];
 
 export default function Home() {
+  const [folderView, setFolderView] = useState('large'); // large, small, list
+  const [time, setTime] = useState(new Date());
+  const { systemTheme, theme, setTheme } = useTheme();
+  const currentTheme = theme === 'system' ? systemTheme : theme;
+  const [showNotificationPanel, setShowNotificationPanel] = useState(false);
+
+  useEffect(() => {
+    console.log(folderView);
+  }, [folderView]);
+
+  // Clock
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const dock_items = [
+    {
+      name: 'File Manager',
+      icon: '/assets/folder_icons/user-desktop.svg',
+      clickHandle: () => {},
+    },
+    {
+      name: 'Chrome',
+      icon: '/assets/app_icons/google-chrome.svg',
+      clickHandle: () => {},
+    },
+    {
+      name: 'Spotify',
+      icon: '/assets/app_icons/spotify-client.svg',
+      clickHandle: () => {},
+    },
+    {
+      name: 'Figma',
+      icon: '/assets/app_icons/figma.svg',
+      clickHandle: () => {},
+    },
+    {
+      name: 'Mail',
+      icon: '/assets/app_icons/internet-mail.svg',
+      clickHandle: () => {},
+    },
+    {
+      name: 'Vscode',
+      icon: '/assets/app_icons/visual-studio-code.svg',
+      clickHandle: () => {},
+    },
+    {
+      name: 'Youtube',
+      icon: '/assets/app_icons/youtube.svg',
+      clickHandle: () => {},
+    },
+    {
+      name: 'Info',
+      icon: '/assets/app_icons/userinfo.svg',
+      clickHandle: () => {},
+    },
+  ];
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">pages/index.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main
+      className="relative flex h-screen flex-col items-center justify-center p-10 bg-cover"
+      style={{ backgroundImage: `url('/assets/wallpaper.png')` }}
+    >
+      <div className="fixed bottom-10 w-full flex justify-between">
+        <div className="mx-10 dark:bg-[#252525] bg-[#eee] rounded-[28px] p-3 flex">
+          <button
+            onClick={() => setShowNotificationPanel(!showNotificationPanel)}
+            className="p-4 flex justify-center items-center rounded-2xl  hover:bg-slate-300/70 dark:hover:bg-slate-600/40 cursor-pointer"
           >
-            By{' '}
+            <svg
+              className="w-6 fill-current"
+              viewBox="0 0 16 10"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M2.85 9.99999C1.95 9.99999 1.32467 9.59132 0.974001 8.77399C0.623334 7.95666 0.765333 7.23199 1.4 6.59999L6.6 1.39999C6.8 1.19999 7.01667 1.04999 7.25 0.949989C7.48333 0.849989 7.73333 0.799988 8 0.799988C8.26667 0.799988 8.51667 0.849989 8.75 0.949989C8.98333 1.04999 9.2 1.19999 9.4 1.39999L14.6 6.59999C15.2333 7.23332 15.3747 7.95866 15.024 8.77599C14.6733 9.59332 14.0487 10.0013 13.15 9.99999H2.85Z" />
+            </svg>
+          </button>
+          <div className="p-4 rounded-xl hover:bg-slate-300/70 dark:hover:bg-slate-600/40 cursor-pointer">
+            <svg
+              width="28"
+              height="14"
+              className="fill-current relative top-[5px]"
+              viewBox="0 0 28 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M0.666672 1.66665C0.666672 1.28887 0.794672 0.971985 1.05067 0.715985C1.30667 0.459985 1.62312 0.332429 2 0.333318L23.3333 0.333318C23.7111 0.333318 24.028 0.461318 24.284 0.717318C24.54 0.973318 24.6676 1.28976 24.6667 1.66665V4.33332H26C26.3778 4.33332 26.6947 4.46132 26.9507 4.71732C27.2067 4.97332 27.3342 5.28976 27.3333 5.66665V8.33332C27.3333 8.7111 27.2053 9.02798 26.9493 9.28399C26.6933 9.53998 26.3769 9.66754 26 9.66665H24.6667V12.3333C24.6667 12.7111 24.5387 13.028 24.2827 13.284C24.0267 13.54 23.7102 13.6675 23.3333 13.6667L2 13.6667C1.62223 13.6667 1.30534 13.5387 1.04934 13.2827C0.793339 13.0267 0.665783 12.7102 0.666672 12.3333V1.66665ZM19.3333 2.99998V11H22V2.99998H19.3333Z" />
+            </svg>
+          </div>
+          <div
+            className="py-3 px-4 flex justify-center items-center rounded-2xl  hover:bg-slate-300/70 dark:hover:bg-slate-600/40   hover:text-gray-600  dark:hover:text-white cursor-pointer"
+            onClick={() =>
+              theme == 'dark' ? setTheme('light') : setTheme('dark')
+            }
+          >
+            <div className="relative">
+              {theme === 'light' ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  fill="currentColor"
+                  class="bi bi-moon-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z" />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  fill="currentColor"
+                  class="bi bi-sun-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
+                </svg>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="mx-10 dark:bg-[#252525] bg-[#eee] rounded-[28px] p-3 flex gap-2">
+          {dock_items.map((item, i) => (
+            <div
+              key={i}
+              onClick={item.clickHandle}
+              className="p-2 flex justify-center items-center rounded-2xl hover:bg-slate-300/70 dark:hover:bg-slate-600/40 cursor-pointer"
+            >
+              <Image src={item.icon} alt={item.name} height={40} width={40} />
+            </div>
+          ))}
+        </div>
+        <div className="mx-10 dark:bg-[#252525] bg-[#eee] rounded-[28px] p-3 flex">
+          <div className="p-1 flex justify-center items-center rounded-2xl  hover:bg-slate-300/70 dark:hover:bg-slate-600/40">
             <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
+              src="/assets/Logo.svg"
+              alt="gravitOS logo"
+              height={45}
+              width={45}
             />
-          </a>
+          </div>
         </div>
       </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+      {/* Notification Panel */}
+      {showNotificationPanel && (
+        <div className="fixed bottom-[140px] left-10 p-6 dark:bg-[#252525] bg-[#eee] rounded-[28px]">
+          <div className="rounded-[16px] bg-gray-300/40 dark:bg-[#383838] px-10 py-4 flex flex-col justify-center items-center">
+            <h2 className="text-5xl font-bold ">
+              {time.toLocaleTimeString('en-US').split(' ')[0].slice(0, -3)}{' '}
+              {time.toLocaleTimeString('en-US').split(' ')[1]}
+            </h2>
+            <p className="text-2xl font-medium mt-2">
+              {time.toLocaleDateString('en-US', { weekday: 'long' })}
+            </p>
+          </div>
+          <div className="grid grid-cols-2  gap-4 mt-6 mb-10">
+            {toggles.map((toggleElem, i) => (
+              <div
+                key={i}
+                className="rounded-[16px] dark:bg-[#eee] bg-[#252525] px-4 py-6 flex justify-center items-center"
+              >
+                <div>{toggleElem.icon}</div>
+                <div className="border-r-[2px] border-gray-300 pr-[15px] mr-[17px] h-5"></div>
+                <div>
+                  <ArrowIcon className="w-[12px] text-[#eee] dark:text-[#252525]"></ArrowIcon>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-col gap-5 mb-8">
+            <div className="w-full flex justify-center items-center">
+              <svg
+                className="w-8 fill-current"
+                viewBox="0 0 28 28"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M9.53333 24.6667H6C5.26667 24.6667 4.63867 24.4053 4.116 23.8827C3.59333 23.36 3.33244 22.7324 3.33333 22V18.4667L0.766667 15.8667C0.255556 15.3556 0 14.7333 0 14C0 13.2667 0.255556 12.6444 0.766667 12.1333L3.33333 9.53333V6C3.33333 5.26667 3.59467 4.63867 4.11733 4.116C4.64 3.59333 5.26756 3.33244 6 3.33333H9.53333L12.1333 0.766667C12.6444 0.255556 13.2667 0 14 0C14.7333 0 15.3556 0.255556 15.8667 0.766667L18.4667 3.33333H22C22.7333 3.33333 23.3613 3.59467 23.884 4.11733C24.4067 4.64 24.6676 5.26756 24.6667 6V9.53333L27.2333 12.1333C27.7444 12.6444 28 13.2667 28 14C28 14.7333 27.7444 15.3556 27.2333 15.8667L24.6667 18.4667V22C24.6667 22.7333 24.4053 23.3613 23.8827 23.884C23.36 24.4067 22.7324 24.6676 22 24.6667H18.4667L15.8667 27.2333C15.3556 27.7444 14.7333 28 14 28C13.2667 28 12.6444 27.7444 12.1333 27.2333L9.53333 24.6667ZM14 20.6667C15.8444 20.6667 17.4169 20.0164 18.7173 18.716C20.0178 17.4156 20.6676 15.8436 20.6667 14C20.6667 12.1556 20.0164 10.5831 18.716 9.28267C17.4156 7.98222 15.8436 7.33244 14 7.33333C12.1556 7.33333 10.5831 7.98356 9.28267 9.284C7.98222 10.5844 7.33244 12.1564 7.33333 14C7.33333 15.8444 7.98356 17.4169 9.284 18.7173C10.5844 20.0178 12.1564 20.6676 14 20.6667ZM14 18C15.1111 18 16.0556 17.6111 16.8333 16.8333C17.6111 16.0556 18 15.1111 18 14C18 12.8889 17.6111 11.9444 16.8333 11.1667C16.0556 10.3889 15.1111 10 14 10C12.8889 10 11.9444 10.3889 11.1667 11.1667C10.3889 11.9444 10 12.8889 10 14C10 15.1111 10.3889 16.0556 11.1667 16.8333C11.9444 17.6111 12.8889 18 14 18ZM14 25.3333L17.3333 22H22V17.3333L25.3333 14L22 10.6667V6H17.3333L14 2.66667L10.6667 6H6V10.6667L2.66667 14L6 17.3333V22H10.6667L14 25.3333ZM14 18C15.1111 18 16.0556 17.6111 16.8333 16.8333C17.6111 16.0556 18 15.1111 18 14C18 12.8889 17.6111 11.9444 16.8333 11.1667C16.0556 10.3889 15.1111 10 14 10C12.8889 10 11.9444 10.3889 11.1667 11.1667C10.3889 11.9444 10 12.8889 10 14C10 15.1111 10.3889 16.0556 11.1667 16.8333C11.9444 17.6111 12.8889 18 14 18Z" />
+              </svg>
+              <div className="relative flex w-full ml-5">
+                <div className="absolute -top-1 h-[5px] rounded-full w-full dark:bg-[#EDEDED33] bg-gray-400/50">
+                  <div className="h-[5px] rounded-full dark:bg-[#EDEDED] bg-[#252525] w-[65%]"></div>
+                  <div className="dark:bg-[#EDEDED] bg-[#252525] h-4 w-4 rounded-full absolute -top-[5px] left-[130px]"></div>
+                </div>
+              </div>
+            </div>
+            <div className="w-full flex justify-center items-center">
+              <svg
+                className="w-8 fill-current"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M0 9.33334V14.6667C0 15.4 0.6 16 1.33333 16H5.33333L9.72 20.3867C10.56 21.2267 12 20.6267 12 19.44V4.54667C12 3.36001 10.56 2.76001 9.72 3.60001L5.33333 8.00001H1.33333C0.6 8.00001 0 8.60001 0 9.33334ZM18 12C17.9997 10.8828 17.6875 9.78793 17.0986 8.83859C16.5097 7.88926 15.6674 7.12319 14.6667 6.62667V17.36C16.64 16.3867 18 14.36 18 12ZM14.6667 1.93334V2.20001C14.6667 2.70667 15 3.14667 15.4667 3.33334C18.9067 4.70667 21.3333 8.08001 21.3333 12C21.3333 15.92 18.9067 19.2933 15.4667 20.6667C14.9867 20.8533 14.6667 21.2933 14.6667 21.8V22.0667C14.6667 22.9067 15.5067 23.4933 16.28 23.2C20.8 21.48 24 17.12 24 12C24 6.88001 20.8 2.52001 16.28 0.800007C15.5067 0.49334 14.6667 1.09334 14.6667 1.93334Z" />
+              </svg>
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`${inter.className} mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p
-            className={`${inter.className} m-0 max-w-[30ch] text-sm opacity-50`}
-          >
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+              <div className="relative flex w-full ml-5">
+                <div className="absolute -top-1 h-[5px] rounded-full w-full dark:bg-[#EDEDED33] bg-gray-400/50">
+                  <div className="h-[5px] rounded-full dark:bg-[#EDEDED] bg-[#252525] w-[35%]"></div>
+                  <div className="dark:bg-[#EDEDED] bg-[#252525] h-4 w-4 rounded-full absolute -top-[5px] left-[60px]"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="relative w-full">
+            <svg
+              className="absolute top-1/2 left-4 transform -translate-y-1/2 w-4 fill-current  "
+              viewBox="0 0 20 21"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M17.9152 20.2277L11.6652 13.9777C11.1072 14.4241 10.4654 14.7775 9.73997 15.038C9.01453 15.2984 8.24258 15.4286 7.42413 15.4286C5.3966 15.4286 3.68082 14.7262 2.27681 13.3214C0.872787 11.9167 0.170407 10.2009 0.169662 8.17413C0.169662 6.1466 0.872043 4.43082 2.27681 3.02681C3.68157 1.62279 5.39734 0.920407 7.42413 0.919662C9.45166 0.919662 11.1674 1.62204 12.5714 3.02681C13.9755 4.43157 14.6778 6.14734 14.6786 8.17413C14.6786 8.99258 14.5484 9.76453 14.288 10.49C14.0275 11.2154 13.6741 11.8572 13.2277 12.4152L19.5056 18.6931C19.7102 18.8977 19.8125 19.1488 19.8125 19.4464C19.8125 19.7441 19.7009 20.0045 19.4777 20.2277C19.2731 20.4323 19.0127 20.5346 18.6964 20.5346C18.3802 20.5346 18.1198 20.4323 17.9152 20.2277ZM7.42413 13.1964C8.81922 13.1964 10.0052 12.708 10.9822 11.731C11.9591 10.7541 12.4472 9.56847 12.4464 8.17413C12.4464 6.77904 11.958 5.59303 10.981 4.61609C10.0041 3.63916 8.81847 3.15106 7.42413 3.15181C6.02904 3.15181 4.84303 3.64027 3.86609 4.61721C2.88916 5.59414 2.40106 6.77978 2.40181 8.17413C2.40181 9.56922 2.89027 10.7552 3.86721 11.7322C4.84414 12.7091 6.02978 13.1972 7.42413 13.1964Z" />
+            </svg>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`${inter.className} mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p
-            className={`${inter.className} m-0 max-w-[30ch] text-sm opacity-50`}
-          >
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+            <input
+              type="text"
+              placeholder="Search"
+              className="rounded-full pl-12 w-full py-1 dark:bg-[#363636] bg-gray-300/50 focus:outline-none"
+            />
+          </div>
+          <div className="mt-6 flex gap-6 justify-around">
+            <Image
+              src="/assets/app_icons/visual-studio-code.svg"
+              alt="vscode"
+              height={40}
+              width={40}
+            />
+            <Image
+              src="/assets/app_icons/google-chrome.svg"
+              alt="chrome"
+              height={40}
+              width={40}
+            />
+            <Image
+              src="/assets/app_icons/internet-mail.svg"
+              alt="mail"
+              height={40}
+              width={40}
+            />
+            <Image
+              src="/assets/app_icons/youtube.svg"
+              alt="youtube"
+              height={40}
+              width={40}
+            />
+          </div>
+        </div>
+      )}
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`${inter.className} mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p
-            className={`${inter.className} m-0 max-w-[30ch] text-sm opacity-50`}
+      {/* file manager */}
+      <div className="w-[800px] h-[550px] relative bottom-10 left-10 dark:bg-[#252525] bg-[#eee] rounded-[24px] shadow-xl p-4 flex flex-col">
+        <div className="flex">
+          <div className="flex gap-6">
+            <div className="w-4 h-4 rounded-full bg-[#FF7575]"></div>
+            <div className="w-4 h-4 rounded-full bg-[#DB9E42]"></div>
+            <div className="w-4 h-4 rounded-full bg-[#959595]"></div>
+          </div>
+          <div className="  font-medium w-full relative right-10">
+            <p className="text-center">File Manager</p>
+          </div>
+        </div>
+        <div className="flex gap-6 mt-6 justify-evenly">
+          <ArrowIcon className="  w-3 transform rotate-180 ml-3"></ArrowIcon>
+          <ArrowIcon className="  w-3"></ArrowIcon>
+          <svg
+            className="fill-current   w-5"
+            viewBox="0 0 20 21"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
+            <path d="M17.9152 20.2277L11.6652 13.9777C11.1072 14.4241 10.4654 14.7775 9.73997 15.038C9.01453 15.2984 8.24258 15.4286 7.42413 15.4286C5.3966 15.4286 3.68082 14.7262 2.27681 13.3214C0.872787 11.9167 0.170407 10.2009 0.169662 8.17413C0.169662 6.1466 0.872043 4.43082 2.27681 3.02681C3.68157 1.62279 5.39734 0.920407 7.42413 0.919662C9.45166 0.919662 11.1674 1.62204 12.5714 3.02681C13.9755 4.43157 14.6778 6.14734 14.6786 8.17413C14.6786 8.99258 14.5484 9.76453 14.288 10.49C14.0275 11.2154 13.6741 11.8572 13.2277 12.4152L19.5056 18.6931C19.7102 18.8977 19.8125 19.1488 19.8125 19.4464C19.8125 19.7441 19.7009 20.0045 19.4777 20.2277C19.2731 20.4323 19.0127 20.5346 18.6964 20.5346C18.3802 20.5346 18.1198 20.4323 17.9152 20.2277ZM7.42413 13.1964C8.81922 13.1964 10.0052 12.708 10.9822 11.731C11.9591 10.7541 12.4472 9.56847 12.4464 8.17413C12.4464 6.77904 11.958 5.59303 10.981 4.61609C10.0041 3.63916 8.81847 3.15106 7.42413 3.15181C6.02904 3.15181 4.84303 3.64027 3.86609 4.61721C2.88916 5.59414 2.40106 6.77978 2.40181 8.17413C2.40181 9.56922 2.89027 10.7552 3.86721 11.7322C4.84414 12.7091 6.02978 13.1972 7.42413 13.1964Z" />
+          </svg>
+          <div className="relative w-full">
+            <svg
+              className="absolute top-[46%] left-4 transform -translate-y-1/2 w-4 fill-current  "
+              viewBox="0 0 17 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M6.67855 14.4286V9.96429H10.25V14.4286C10.25 14.9196 10.6518 15.3214 11.1428 15.3214H13.8214C14.3125 15.3214 14.7143 14.9196 14.7143 14.4286V8.17858H16.2321C16.6428 8.17858 16.8393 7.66965 16.5268 7.40179L9.06247 0.678576C8.72319 0.375004 8.20533 0.375004 7.86605 0.678576L0.40176 7.40179C0.0981885 7.66965 0.285688 8.17858 0.696403 8.17858H2.21426V14.4286C2.21426 14.9196 2.61605 15.3214 3.10712 15.3214H5.78569C6.27676 15.3214 6.67855 14.9196 6.67855 14.4286Z" />
+            </svg>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`${inter.className} mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p
-            className={`${inter.className} m-0 max-w-[30ch] text-sm opacity-50`}
-          >
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+            <input
+              type="text"
+              value="/home/user/"
+              className="rounded-full pl-11 w-full py-1 dark:bg-[#2C2D2F] bg-gray-300/60  focus:outline-none"
+            />
+          </div>
+          <div>
+            <select
+              className="rounded-full pl-4 pr-10 w-fit py-[5px] dark:bg-[#2C2D2F] bg-gray-300/60 focus:outline-none"
+              name="file-icon-size"
+              id="file-icon-select"
+              onChange={(e) => setFolderView(e.target.value)}
+            >
+              <option value="large">Large</option>
+              <option value="small">Small</option>
+              <option value="list">List</option>
+            </select>
+          </div>
+        </div>
+        <div className="mt-5 w-full flex h-full">
+          <div className="w-1/4 h-full">
+            <h3 className="text-lg font-bold   ml-3">Places</h3>
+            <div className="flex flex-col mt-3 ml-5">
+              {places.map((place, i) => (
+                <div
+                  key={i}
+                  className="flex gap-4 dark:hover:bg-gray-600/30 hover:bg-gray-300/50 mr-3 py-2 px-3 rounded-xl cursor-pointer"
+                >
+                  {place.icon}
+                  <p className="  font-medium">{place.name}</p>
+                </div>
+              ))}
+            </div>
+            <h3 className="text-lg font-bold   ml-3 mt-2">Devices</h3>
+            <div className="flex flex-col mt-3 ml-5">
+              {devices.map((place, i) => (
+                <div
+                  key={i}
+                  className="flex gap-4 dark:hover:bg-gray-600/30 hover:bg-gray-300/50 mr-3 py-2 px-3 rounded-xl cursor-pointer"
+                >
+                  {place.icon}
+                  <p className="  font-medium">{place.name}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="relative flex-1 w-3/4 h-full dark:bg-[#2D2D2E] bg-[#f9f9f9]  rounded-xl py-6 px-8 overflow-auto">
+            {folderView !== 'list' && (
+              <div className="flex flex-wrap gap-5">
+                {files_in_folder.map((file, i) => (
+                  <div
+                    key={i}
+                    className={`flex flex-col justify-center ${
+                      folderView === 'large' ? 'w-[100px]' : 'w-[80px]'
+                    }  p-2 hover:bg-gray-400/20 rounded-lg cursor-pointer`}
+                  >
+                    <Image
+                      width={folderView === 'large' ? 50 : 30}
+                      height={folderView === 'large' ? 50 : 30}
+                      src={file.icon}
+                      alt="folder"
+                      className="mx-auto"
+                    ></Image>
+                    <p
+                      className={`  font-medium text-center mt-1 ${
+                        folderView === 'small' && 'text-sm'
+                      }`}
+                    >
+                      {file.name}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {folderView === 'list' && (
+              <div className="flex flex-col gap-5" id="list-div">
+                {files_in_folder.map((file, i) => (
+                  <div
+                    key={i}
+                    className="flex gap-4 py-2 px-4 hover:bg-gray-400/20 rounded-lg cursor-pointer"
+                  >
+                    <Image
+                      width={25}
+                      height={25}
+                      src={file.icon}
+                      alt="folder"
+                    ></Image>
+                    <p
+                      className={`  font-medium text-center mt-1 ${
+                        folderView === 'small' && 'text-sm'
+                      }`}
+                    >
+                      {file.name}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="rounded-full dark:bg-[#3f3f3fad] bg-gray-200/60 px-4 py-1 w-fit absolute bottom-3 right-3 font-semibold">
+              <p>6 folders, 0 files, Total: 13.7 GB</p>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
-  )
+  );
 }

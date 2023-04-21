@@ -179,13 +179,6 @@ export default function Home() {
         toggleWindowHandler(5);
       },
     },
-    {
-      name: 'Info',
-      icon: '/assets/app_icons/userinfo.svg',
-      clickHandle: () => {
-        toggleWindowHandler(6);
-      },
-    },
   ];
 
   return (
@@ -283,7 +276,7 @@ export default function Home() {
                       cy="12"
                       r="11"
                       stroke="black"
-                      stroke-width="2"
+                      strokeWidth="2"
                     />
                     <circle cx="12" cy="12" r="5.5" stroke="black" />
                     <line
@@ -292,7 +285,7 @@ export default function Home() {
                       x2="12.25"
                       y2="17"
                       stroke="black"
-                      stroke-width="0.5"
+                      strokeWidth="0.5"
                     />
                     <path
                       d="M6.5 11.5L8.5 7.5L12 6V17.5L10.5 17L7.5 15.5L6.5 11.5Z"
@@ -312,7 +305,7 @@ export default function Home() {
                       cy="12"
                       r="11"
                       stroke="white"
-                      stroke-width="2"
+                      strokeWidth="2"
                     />
                     <circle cx="12" cy="12" r="5.5" stroke="white" />
                     <line
@@ -321,7 +314,7 @@ export default function Home() {
                       x2="12.25"
                       y2="17"
                       stroke="white"
-                      stroke-width="0.5"
+                      strokeWidth="0.5"
                     />
                     <path
                       d="M17.5 11.5L16 8L12.5 6.5V17H14L16.5 15L17.5 11.5Z"
@@ -569,6 +562,25 @@ export default function Home() {
               : 'scale-0 translate-y-[60%] translate-x-[40%]'
           }`}
         >
+          <div
+            onClick={() => {
+              toggleWindowHandler(6);
+            }}
+            className="flex gap-3 items-center px-3 py-2 hover:bg-slate-300/70 dark:hover:bg-slate-600/40 cursor-pointer rounded-2xl "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-info-circle"
+              viewBox="0 0 16 16"
+            >
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+              <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+            </svg>
+            <p className="text-lg">About</p>
+          </div>
           <div
             onClick={() => router.reload()}
             className="flex gap-3 items-center px-3 py-2 hover:bg-slate-300/70 dark:hover:bg-slate-600/40 cursor-pointer rounded-2xl "

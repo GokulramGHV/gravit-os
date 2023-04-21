@@ -8,6 +8,7 @@ import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import Script from 'next/script';
 import InfoWindow from '@/components/infowindow';
+import { useRouter } from 'next/router';
 
 const toggles = [
   {
@@ -80,6 +81,9 @@ export default function Home() {
     false,
   ]);
   const [showLoadPage, setShowLoadPage] = useState(true);
+  const [powerMenu, setPowerMenu] = useState(false);
+  const [batteryPercentage, setBatteryPercentage] = useState(false);
+  const router = useRouter();
 
   const closeWindowHandler = (id) =>
     setActiveWindows((prev) => {
@@ -232,7 +236,12 @@ export default function Home() {
                 <path d="M2.85 9.99999C1.95 9.99999 1.32467 9.59132 0.974001 8.77399C0.623334 7.95666 0.765333 7.23199 1.4 6.59999L6.6 1.39999C6.8 1.19999 7.01667 1.04999 7.25 0.949989C7.48333 0.849989 7.73333 0.799988 8 0.799988C8.26667 0.799988 8.51667 0.849989 8.75 0.949989C8.98333 1.04999 9.2 1.19999 9.4 1.39999L14.6 6.59999C15.2333 7.23332 15.3747 7.95866 15.024 8.77599C14.6733 9.59332 14.0487 10.0013 13.15 9.99999H2.85Z" />
               </svg>
             </button>
-            <div className="p-4 rounded-xl hover:bg-slate-300/70 dark:hover:bg-slate-600/40 cursor-pointer">
+            <div
+              onClick={() => {
+                setBatteryPercentage(!batteryPercentage);
+              }}
+              className="p-4 rounded-xl hover:bg-slate-300/70 dark:hover:bg-slate-600/40 cursor-pointer"
+            >
               <svg
                 width="28"
                 height="14"
@@ -325,7 +334,12 @@ export default function Home() {
             ))}
           </div>
           <div className="mx-10 dark:bg-[#252525] bg-[#eee] rounded-[28px] p-3 flex">
-            <div className="p-1 flex justify-center items-center rounded-2xl  hover:bg-slate-300/70 dark:hover:bg-slate-600/40">
+            <div
+              onClick={() => {
+                setPowerMenu(!powerMenu);
+              }}
+              className="p-1 flex justify-center items-center rounded-2xl  hover:bg-slate-300/70 dark:hover:bg-slate-600/40"
+            >
               <Image
                 src="/assets/Logo.svg"
                 alt="gravitOS logo"
@@ -506,6 +520,58 @@ export default function Home() {
           }}
           refPass={constraintsRef}
         />
+
+        <div
+          className={`z-50 fixed bottom-[140px] right-10 p-3 dark:bg-[#252525] bg-[#eee] rounded-[28px] transition-all duration-300 ease-in-out ${
+            powerMenu
+              ? 'scale-100'
+              : 'scale-0 translate-y-[60%] translate-x-[40%]'
+          }`}
+        >
+          <div
+            onClick={() => router.reload()}
+            className="flex gap-3 items-center px-3 py-2 hover:bg-slate-300/70 dark:hover:bg-slate-600/40 cursor-pointer rounded-2xl "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              className="bi bi-power w-4 h-4"
+              viewBox="0 0 16 16"
+            >
+              <path d="M7.5 1v7h1V1h-1z" />
+              <path d="M3 8.812a4.999 4.999 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812z" />
+            </svg>
+            <p className="text-lg">Power Off</p>
+          </div>
+          <div
+            onClick={() => router.reload()}
+            className="flex gap-3 items-center px-3 py-2 hover:bg-slate-300/70 dark:hover:bg-slate-600/40 cursor-pointer rounded-2xl "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="bi bi-arrow-repeat w-4 h-4"
+              fill="currentColor"
+              viewBox="0 0 16 16"
+            >
+              <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z" />
+              <path
+                fillRule="evenodd"
+                d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"
+              />
+            </svg>
+            <p className="text-lg">Restart</p>
+          </div>
+        </div>
+
+        <div
+          className={`z-50 fixed bottom-[140px] left-20 px-5 py-3 dark:bg-[#252525] bg-[#eee] rounded-[18px] transition-all duration-300 ease-in-out ${
+            batteryPercentage
+              ? 'scale-100'
+              : 'scale-0 translate-y-[60%] translate-x-[40%]'
+          }`}
+        >
+          <p className="text-lg font-semibold">75 %</p>
+        </div>
       </motion.div>
       <div
         id="load-page"

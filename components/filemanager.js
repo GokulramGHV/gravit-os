@@ -168,7 +168,7 @@ export default function FileManager({ isOpen, closeHandler, refPass }) {
 
           <input
             type="text"
-            value="/home/user/"
+            defaultValue="/home/user/"
             className="rounded-full pl-11 w-full py-1 dark:bg-[#2C2D2F] bg-gray-300/60  focus:outline-none"
           />
         </div>
@@ -219,7 +219,7 @@ export default function FileManager({ isOpen, closeHandler, refPass }) {
                 <div
                   key={i}
                   className={`flex flex-col justify-center ${
-                    folderView === 'large' ? 'w-[100px]' : 'w-[80px]'
+                    folderView === 'large' ? 'w-[100px]' : 'w-[86px]'
                   }  p-2 hover:bg-gray-400/20 rounded-lg cursor-pointer`}
                 >
                   <Image

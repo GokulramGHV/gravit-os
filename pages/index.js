@@ -79,6 +79,7 @@ export default function Home() {
     false,
     false,
   ]);
+  const [showLoadPage, setShowLoadPage] = useState(true);
 
   const closeWindowHandler = (id) =>
     setActiveWindows((prev) => {
@@ -110,6 +111,15 @@ export default function Home() {
           viewer_selection.shadowRoot.querySelector('#logo').remove();
       }, 1000);
     }
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowLoadPage(false);
+      setTimeout(() => {
+        document.getElementById('load-page').classList.add('z-[-10]');
+      }, 600);
+    }, 8000);
   }, []);
 
   const dock_items = [
@@ -189,7 +199,7 @@ export default function Home() {
               width="16"
               height="16"
               fill="currentColor"
-              class="bi bi-calendar2"
+              className="bi bi-calendar2"
               viewBox="0 0 16 16"
             >
               <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z" />
@@ -328,7 +338,7 @@ export default function Home() {
 
         {/* Notification Panel */}
         <div
-          className={`fixed bottom-[140px] left-10 p-6 dark:bg-[#252525] bg-[#eee] rounded-[28px] transition-all duration-300 ease-in-out ${
+          className={`z-50 fixed bottom-[140px] left-10 p-6 dark:bg-[#252525] bg-[#eee] rounded-[28px] transition-all duration-300 ease-in-out ${
             showNotificationPanel
               ? 'scale-100'
               : 'scale-0 translate-y-[60%] translate-x-[-40%]'
@@ -446,19 +456,16 @@ export default function Home() {
         />
         <IFrameWindow
           title="Google Chrome"
-          url="https://google-clone-psi-peach.vercel.app/"
+          url="/assets/window_images/google.png"
           isOpen={activeWindows[1]}
           closeHandler={() => {
             closeWindowHandler(1);
           }}
           refPass={constraintsRef}
-          // url="https://friendly-pare-03979d.netlify.app/" spotify
-          // url="https://youtubewebui.netlify.app/" youtube
-          // https://priyanshu-gmail-clone.netlify.app/ gmail
-        ></IFrameWindow>
+        />
         <IFrameWindow
           title="Spotify"
-          url="https://friendly-pare-03979d.netlify.app/"
+          url="/assets/window_images/spotify.png"
           isOpen={activeWindows[2]}
           closeHandler={() => {
             closeWindowHandler(2);
@@ -466,11 +473,29 @@ export default function Home() {
           refPass={constraintsRef}
         ></IFrameWindow>
         <IFrameWindow
+          title="Mail"
+          url="/assets/window_images/mail.png"
+          isOpen={activeWindows[3]}
+          closeHandler={() => {
+            closeWindowHandler(3);
+          }}
+          refPass={constraintsRef}
+        ></IFrameWindow>
+        <IFrameWindow
           title="VS Code"
-          url="https://upload.wikimedia.org/wikipedia/commons/e/e9/VS_Code_%28Insiders%29.png"
+          url="/assets/window_images/vscode.png"
           isOpen={activeWindows[4]}
           closeHandler={() => {
             closeWindowHandler(4);
+          }}
+          refPass={constraintsRef}
+        ></IFrameWindow>
+        <IFrameWindow
+          title="YouTube"
+          url="/assets/window_images/youtube.png"
+          isOpen={activeWindows[5]}
+          closeHandler={() => {
+            closeWindowHandler(5);
           }}
           refPass={constraintsRef}
         ></IFrameWindow>
@@ -482,6 +507,48 @@ export default function Home() {
           refPass={constraintsRef}
         />
       </motion.div>
+      <div
+        id="load-page"
+        className={`load-div absolute w-full top-0 left-0 ${
+          showLoadPage ? 'opacity-100' : 'opacity-0'
+        } duration-[600ms] transition-opacity`}
+      >
+        <div className="h-screen w-full flex flex-col justify-center items-center">
+          <div className="relative">
+            <div className="w-[300px] h-[300px] border-[3px] border-dashed border-gray-300 rounded-full flex justify-center items-center border-spacing-9">
+              <Image
+                src="/assets/Sun.svg"
+                className="animate-pulsing"
+                width={112}
+                height={112}
+                alt="Sun"
+              />
+            </div>
+            <div className="animate-spinning absolute right-0 top-0 w-[300px] h-[300px] rounded-full flex justify-center items-center">
+              <Image
+                src="/assets/Earth.svg"
+                className="absolute top-0 right-0 animate-spinning"
+                width={80}
+                height={80}
+                alt="Earth"
+              />
+            </div>
+          </div>
+          <Image
+            src="/assets/Full Logo.svg"
+            className="mt-12"
+            width={300}
+            height={150}
+            alt="full logo"
+          />
+          <div className="progress mt-8">
+            <div className="progress-value"></div>
+          </div>
+          <div className="font-semibold mt-4 text-gray-500 text-lg">
+            We&apos;re getting things ready for you...
+          </div>
+        </div>
+      </div>
     </>
   );
 }

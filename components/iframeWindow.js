@@ -20,7 +20,7 @@ export default function IFrameWindow({
       >
         <div className="relative rounded-xl w-full h-full mt-3">
           <Image
-            src="https://upload.wikimedia.org/wikipedia/commons/e/e9/VS_Code_%28Insiders%29.png"
+            src={url}
             fill
             alt="display"
             className="rounded-xl"

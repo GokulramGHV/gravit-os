@@ -11,11 +11,11 @@ export default function WindowPanel({
   const controls = useDragControls();
 
   const variants = {
-    open: { scale: 1, y: 0, transition: { duration: 0.3, ease: 'linear' } },
+    open: { scale: 1, y: 0, transition: { duration: 0.2, ease: 'linear' } },
     closed: {
       scale: 0,
       y: '100%',
-      transition: { duration: 0.3, ease: 'linear' },
+      transition: { duration: 0.2, ease: 'linear' },
     },
   };
 

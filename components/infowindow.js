@@ -17,9 +17,10 @@ export default function InfoWindow({ isOpen, closeHandler, refPass }) {
           width={260}
           height={200}
           className="mx-auto"
+          alt="logo"
         ></Image>
         <div className="flex flex-col gap-1 text-center">
-          <p className="font-bold text-xl mt-2">Project by:</p>
+          <p className="font-bold text-xl mt-2">Made by:</p>
           <p className="font-medium text-lg mt-3">Gokulram A</p>
           <p className="font-medium">&</p>
           <p className="font-medium text-lg">Mahalakshmi M</p>

@@ -82,8 +82,16 @@ export default function Home() {
   ]);
   const [showLoadPage, setShowLoadPage] = useState(true);
   const [powerMenu, setPowerMenu] = useState(false);
-  const [batteryPercentage, setBatteryPercentage] = useState(false);
+  const [showBatteryPercentage, setShowBatteryPercentage] = useState(false);
   const router = useRouter();
+  const [volume, setVolume] = useState(50);
+  const [brightness, setBrightness] = useState(100);
+  const [toggleButtonsState, setToggleButtonsState] = useState([
+    true,
+    true,
+    true,
+    true,
+  ]);
 
   const closeWindowHandler = (id) =>
     setActiveWindows((prev) => {
@@ -111,8 +119,10 @@ export default function Home() {
       setTimeout(() => {
         const viewer_selection = document.getElementById('spline-viewer');
         console.log('Viewer:', viewer_selection.shadowRoot);
-        if (viewer_selection.shadowRoot)
-          viewer_selection.shadowRoot.querySelector('#logo').remove();
+        if (viewer_selection.shadowRoot) {
+          if (viewer_selection.shadowRoot.querySelector('#logo'))
+            viewer_selection.shadowRoot.querySelector('#logo').remove();
+        }
       }, 1000);
     }
   }, []);
@@ -238,7 +248,7 @@ export default function Home() {
             </button>
             <div
               onClick={() => {
-                setBatteryPercentage(!batteryPercentage);
+                setShowBatteryPercentage(!showBatteryPercentage);
               }}
               className="p-4 rounded-xl hover:bg-slate-300/70 dark:hover:bg-slate-600/40 cursor-pointer"
             >
@@ -340,12 +350,21 @@ export default function Home() {
               }}
               className="p-1 flex justify-center items-center rounded-2xl  hover:bg-slate-300/70 dark:hover:bg-slate-600/40"
             >
-              <Image
-                src="/assets/Logo.svg"
-                alt="gravitOS logo"
-                height={45}
-                width={45}
-              />
+              {theme === 'dark' ? (
+                <Image
+                  src="/assets/Logo.svg"
+                  alt="gravitOS logo"
+                  height={45}
+                  width={45}
+                />
+              ) : (
+                <Image
+                  src="/assets/Logo Inverted.svg"
+                  alt="gravitOS logo"
+                  height={45}
+                  width={45}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -370,11 +389,22 @@ export default function Home() {
           <div className="grid grid-cols-2  gap-4 mt-6 mb-10">
             {toggles.map((toggleElem, i) => (
               <div
+                onClick={() => {
+                  setToggleButtonsState((prev) => {
+                    let newArr = [...prev];
+                    newArr[i] = !newArr[i];
+                    return newArr;
+                  });
+                }}
                 key={i}
-                className="rounded-[16px] dark:bg-[#b1d9ff] bg-[#7bb7ef] px-4 py-6 flex justify-center items-center"
+                className={`rounded-[16px] cursor-pointer ${
+                  toggleButtonsState[i]
+                    ? 'dark:bg-[#b1d9ff] dark:hover:bg-[#5d9edb] bg-[#7bb7ef] hover:bg-[#3ba0fe]'
+                    : 'dark:bg-[#eee] dark:hover:bg-[#e0e0e0] bg-[#d8d7d7] hover:bg-[#d1d0d0]'
+                } px-4 py-6 flex justify-center items-center`}
               >
                 <div>{toggleElem.icon}</div>
-                <div className="border-r-[2px] border-gray-300 pr-[15px] mr-[17px] h-5"></div>
+                <div className="border-r-[2px] border-[#eeeeee90] dark:border-[#25252590] pr-[15px] mr-[17px] h-5"></div>
                 <div>
                   <ArrowIcon className="w-[12px] text-[#eee] dark:text-[#252525]"></ArrowIcon>
                 </div>
@@ -384,36 +414,47 @@ export default function Home() {
           <div className="flex flex-col gap-5 mb-8">
             <div className="w-full flex justify-center items-center">
               <svg
-                className="w-8 fill-current"
+                className="w-7 fill-current"
                 viewBox="0 0 28 28"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path d="M9.53333 24.6667H6C5.26667 24.6667 4.63867 24.4053 4.116 23.8827C3.59333 23.36 3.33244 22.7324 3.33333 22V18.4667L0.766667 15.8667C0.255556 15.3556 0 14.7333 0 14C0 13.2667 0.255556 12.6444 0.766667 12.1333L3.33333 9.53333V6C3.33333 5.26667 3.59467 4.63867 4.11733 4.116C4.64 3.59333 5.26756 3.33244 6 3.33333H9.53333L12.1333 0.766667C12.6444 0.255556 13.2667 0 14 0C14.7333 0 15.3556 0.255556 15.8667 0.766667L18.4667 3.33333H22C22.7333 3.33333 23.3613 3.59467 23.884 4.11733C24.4067 4.64 24.6676 5.26756 24.6667 6V9.53333L27.2333 12.1333C27.7444 12.6444 28 13.2667 28 14C28 14.7333 27.7444 15.3556 27.2333 15.8667L24.6667 18.4667V22C24.6667 22.7333 24.4053 23.3613 23.8827 23.884C23.36 24.4067 22.7324 24.6676 22 24.6667H18.4667L15.8667 27.2333C15.3556 27.7444 14.7333 28 14 28C13.2667 28 12.6444 27.7444 12.1333 27.2333L9.53333 24.6667ZM14 20.6667C15.8444 20.6667 17.4169 20.0164 18.7173 18.716C20.0178 17.4156 20.6676 15.8436 20.6667 14C20.6667 12.1556 20.0164 10.5831 18.716 9.28267C17.4156 7.98222 15.8436 7.33244 14 7.33333C12.1556 7.33333 10.5831 7.98356 9.28267 9.284C7.98222 10.5844 7.33244 12.1564 7.33333 14C7.33333 15.8444 7.98356 17.4169 9.284 18.7173C10.5844 20.0178 12.1564 20.6676 14 20.6667ZM14 18C15.1111 18 16.0556 17.6111 16.8333 16.8333C17.6111 16.0556 18 15.1111 18 14C18 12.8889 17.6111 11.9444 16.8333 11.1667C16.0556 10.3889 15.1111 10 14 10C12.8889 10 11.9444 10.3889 11.1667 11.1667C10.3889 11.9444 10 12.8889 10 14C10 15.1111 10.3889 16.0556 11.1667 16.8333C11.9444 17.6111 12.8889 18 14 18ZM14 25.3333L17.3333 22H22V17.3333L25.3333 14L22 10.6667V6H17.3333L14 2.66667L10.6667 6H6V10.6667L2.66667 14L6 17.3333V22H10.6667L14 25.3333ZM14 18C15.1111 18 16.0556 17.6111 16.8333 16.8333C17.6111 16.0556 18 15.1111 18 14C18 12.8889 17.6111 11.9444 16.8333 11.1667C16.0556 10.3889 15.1111 10 14 10C12.8889 10 11.9444 10.3889 11.1667 11.1667C10.3889 11.9444 10 12.8889 10 14C10 15.1111 10.3889 16.0556 11.1667 16.8333C11.9444 17.6111 12.8889 18 14 18Z" />
               </svg>
-              <div className="relative flex w-full ml-5">
+              <input
+                type="range"
+                style={{ backgroundSize: `${brightness}% 100%` }}
+                value={brightness}
+                className="w-full relative left-4 outline-none border-0 ring-0"
+                onChange={(e) => {
+                  setBrightness(e.target.value);
+                }}
+              />
+              {/* <div className="relative flex w-full ml-5">
                 <div className="absolute -top-1 h-[5px] rounded-full w-full dark:bg-[#EDEDED33] bg-gray-400/50">
                   <div className="h-[5px] rounded-full dark:bg-[#EDEDED] bg-[#252525] w-[65%]"></div>
                   <div className="dark:bg-[#EDEDED] bg-[#252525] h-4 w-4 rounded-full absolute -top-[5px] left-[130px]"></div>
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className="w-full flex justify-center items-center">
               <svg
-                className="w-8 fill-current"
+                className="w-6 fill-current"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path d="M0 9.33334V14.6667C0 15.4 0.6 16 1.33333 16H5.33333L9.72 20.3867C10.56 21.2267 12 20.6267 12 19.44V4.54667C12 3.36001 10.56 2.76001 9.72 3.60001L5.33333 8.00001H1.33333C0.6 8.00001 0 8.60001 0 9.33334ZM18 12C17.9997 10.8828 17.6875 9.78793 17.0986 8.83859C16.5097 7.88926 15.6674 7.12319 14.6667 6.62667V17.36C16.64 16.3867 18 14.36 18 12ZM14.6667 1.93334V2.20001C14.6667 2.70667 15 3.14667 15.4667 3.33334C18.9067 4.70667 21.3333 8.08001 21.3333 12C21.3333 15.92 18.9067 19.2933 15.4667 20.6667C14.9867 20.8533 14.6667 21.2933 14.6667 21.8V22.0667C14.6667 22.9067 15.5067 23.4933 16.28 23.2C20.8 21.48 24 17.12 24 12C24 6.88001 20.8 2.52001 16.28 0.800007C15.5067 0.49334 14.6667 1.09334 14.6667 1.93334Z" />
               </svg>
-
-              <div className="relative flex w-full ml-5">
-                <div className="absolute -top-1 h-[5px] rounded-full w-full dark:bg-[#EDEDED33] bg-gray-400/50">
-                  <div className="h-[5px] rounded-full dark:bg-[#EDEDED] bg-[#252525] w-[35%]"></div>
-                  <div className="dark:bg-[#EDEDED] bg-[#252525] h-4 w-4 rounded-full absolute -top-[5px] left-[60px]"></div>
-                </div>
-              </div>
+              <input
+                type="range"
+                style={{ backgroundSize: `${volume}% 100%` }}
+                value={volume}
+                className="w-full relative left-4 outline-none border-0 ring-0"
+                onChange={(e) => {
+                  setVolume(e.target.value);
+                }}
+              />
             </div>
           </div>
           <div className="relative w-full">
@@ -565,12 +606,12 @@ export default function Home() {
 
         <div
           className={`z-50 fixed bottom-[140px] left-20 px-5 py-3 dark:bg-[#252525] bg-[#eee] rounded-[18px] transition-all duration-300 ease-in-out ${
-            batteryPercentage
+            showBatteryPercentage
               ? 'scale-100'
               : 'scale-0 translate-y-[60%] translate-x-[40%]'
           }`}
         >
-          <p className="text-lg font-semibold">75 %</p>
+          <p className="text-lg font-semibold">82 %</p>
         </div>
       </motion.div>
       <div
@@ -615,6 +656,11 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      <div
+        className="absolute top-0 left-0 bg-black h-screen w-full pointer-events-none z-[100]"
+        style={{ opacity: `${50 - 50 * (brightness / 100)}%` }}
+      ></div>
     </>
   );
 }
